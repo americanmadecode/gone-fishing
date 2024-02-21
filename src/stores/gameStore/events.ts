@@ -13,7 +13,6 @@ export const events = ({ triggerWonRound }: GameEventsProps) => {
     mousePosition.y = event.clientY;
     mousePosition = mousePosition;
     const currentStore = get(gameStore);
-    console.log(currentStore.fishLocation);
 
     if (
       mousePosition.x > currentStore.fishLocation.x &&

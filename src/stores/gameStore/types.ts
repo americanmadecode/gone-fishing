@@ -9,17 +9,14 @@ export type GameStore = {
     x: number;
     y: number;
   };
+  // surely there's a better way to do this
+  loading: {
+    wonRound: boolean;
+  };
 };
 
 export type GameFunctionsProps = {
-  store: Writable<{
-    score: number;
-    fishSize: number;
-    fishLocation: {
-      x: number;
-      y: number;
-    };
-  }>;
+  store: Writable<GameStore>;
 };
 
 export type GameEventsProps = {

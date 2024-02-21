@@ -5,8 +5,11 @@ import type { GameStore } from "./types";
 
 const defaultStore: GameStore = {
   score: 0,
-  fishSize: 100,
+  fishSize: 200,
   fishLocation: { x: 0, y: 0 },
+  loading: {
+    wonRound: false,
+  },
 };
 
 function initializeGameStore() {

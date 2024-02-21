@@ -1,11 +1,15 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import fishIcon from "./assets/fish-icon.svg";
   import { gameStore } from "./stores/gameStore/store";
+  import typewriter from "./utils/animations/typewriter";
+  import { fade } from "svelte/transition";
 
   let pond;
   let pondX;
   let pondY;
+
+  tick;
 
   // Add the observer when component mounts and cleanup after
   onMount(() => {
@@ -41,15 +45,23 @@
     id="pond"
     bind:this={pond}
   >
-    <img
-      class="fish"
-      style="height:{$gameStore.fishSize}px; width: {$gameStore.fishSize}px; top: {$gameStore
-        .fishLocation.y}px; left: {$gameStore.fishLocation.x}px"
-      src={fishIcon}
-      alt="fishie"
-    />
+    {#if $gameStore.loading.wonRound}
+      <img
+        class="fish"
+        style="height:{$gameStore.fishSize}px; width: {$gameStore.fishSize}px; top: {$gameStore
+          .fishLocation.y}px; left: {$gameStore.fishLocation.x}px"
+        src={fishIcon}
+        alt="fishie"
+        transition:fade
+      />
+    {/if}
   </div>
-  <div class="sidebar"></div>
+  <div class="sidebar">
+    <h1>Score: {$gameStore.score}</h1>
+    {#if $gameStore.loading.wonRound}
+      <p transition:typewriter={{ speed: 2 }}>Good work, you caught a fishy</p>
+    {/if}
+  </div>
 </main>
 
 <style>
@@ -64,7 +76,17 @@
     position: relative;
   }
   .playingField {
-    background: red;
+    background: #4ac29a; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+      to right,
+      #bdfff3,
+      #4ac29a
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+      to right,
+      #bdfff3,
+      #4ac29a
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     height: 100%;
     width: 75%;
   }

@@ -1,3 +1,5 @@
+import { get } from "svelte/store";
+import { gameStore } from "./store";
 import {
   type GameFunctionsProps,
   type ResetProps,
@@ -11,7 +13,7 @@ export const functions = ({ store }: GameFunctionsProps) => {
       (gameStore) =>
         (gameStore = {
           ...gameStore,
-          fishSize: Math.round(gameStore.fishSize * 0.75),
+          fishSize: Math.round(gameStore.fishSize * 0.9),
         })
     );
   };
@@ -23,10 +25,25 @@ export const functions = ({ store }: GameFunctionsProps) => {
     );
   };
 
-  const triggerWonRound = ({ pondWidth, pondHeight }: TriggerWonRoundProps) => {
+  const triggerWonRound = async ({
+    pondWidth,
+    pondHeight,
+  }: TriggerWonRoundProps) => {
+    // Is this bad practice?
+    const currentStore = get(gameStore);
+    if (currentStore.loading.wonRound) return;
+    store.update(
+      (gameStore) => (gameStore = { ...gameStore, loading: { wonRound: true } })
+    );
+    // Interesting, going to sleep for 5 seconds
+    await new Promise((r) => setTimeout(r, 3000));
     incrementScore();
     triggerFishShrink();
     triggerFishRelocate({ pondHeight, pondWidth });
+    store.update(
+      (gameStore) =>
+        (gameStore = { ...gameStore, loading: { wonRound: false } })
+    );
   };
 
   const triggerFishRelocate = ({
